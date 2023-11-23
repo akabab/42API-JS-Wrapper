@@ -15,6 +15,6 @@ export class EventsUsersManager extends BaseManager {
       "events/" + event_id + "/events_users/?" + options?.params.join("&"),
       options?.limit,
     );
-    return res.map((ue) => new EventsUsers(<IEventUser> ue));
+    return res.map((eu) => new EventsUsers(<IEventUser> eu));
   }
 }

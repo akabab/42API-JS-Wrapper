@@ -58,7 +58,7 @@ export class Client {
 			client_secret: this._secret,
 		}).toString();
 		const reqOptions = {
-			url: "https://api.intra.42.fr/oauth/token",
+			url: `${Client.uri}oauth/token`,
 			method: "POST",
 			headers: headers,
 			data: body,
