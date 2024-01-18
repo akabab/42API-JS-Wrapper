@@ -1,6 +1,7 @@
 import { BaseManager } from "../managers/BaseManager";
 import { Client } from "./client";
 import { ICursusUsers } from "./cursus_users";
+import { IProjectsUsers } from "./projects_users";
 import { IScaleTeam, ScaleTeam } from "./scale_teams";
 
 export interface IUser {
@@ -37,7 +38,7 @@ export interface IUser {
 	"alumni?": boolean;
 	groups: object[];
 	cursus_users: ICursusUsers[];
-	projects_users: object[];
+	projects_users: IProjectsUsers[];
 	languages_users: object[];
 	achievements: object[];
 	titles: object[];
@@ -85,7 +86,7 @@ export class User extends BaseManager {
 	"alumni?": boolean;
 	groups: object[];
 	cursus_users: ICursusUsers[];
-	projects_users: object[];
+	projects_users: IProjectsUsers[];
 	languages_users: object[];
 	achievements: object[];
 	titles: object[];
