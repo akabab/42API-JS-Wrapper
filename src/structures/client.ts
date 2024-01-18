@@ -8,12 +8,14 @@ import { Loader } from "../utils/loader";
 import { EventsUsersManager } from "../managers/EventsUsersManager";
 import { ExamsUsersManager } from "../managers/ExamsUsersManager";
 import { CursusManager } from "../managers/CursusManager";
+import { CursusUsersManager } from "../managers/CursusUsersManager";
 import { ProjectManager } from "../managers/ProjectManager";
+import { ProjectsUsersManager } from "../managers/ProjectsUsersManager";
 import { ScaleTeamsManager } from "../managers/ScaleTeamsManager";
 import { AuthManager } from "../auth/auth_manager";
 
 const limiter = new Bottleneck({
-	maxConcurrent: 2,
+	maxConcurrent: 8,
 	minTime: 500,
 });
 
@@ -32,7 +34,9 @@ export class Client {
 	events_users = new EventsUsersManager(this);
 	exams_users = new ExamsUsersManager(this);
 	cursus = new CursusManager(this);
+	cursus_users = new CursusUsersManager(this);
 	projects = new ProjectManager(this);
+	projects_users = new ProjectsUsersManager(this);
 	scale_teams = new ScaleTeamsManager(this);
 
 	constructor(
@@ -52,66 +56,98 @@ export class Client {
 			"Content-Type": "application/x-www-form-urlencoded",
 			"Accept-Encoding": "application/json",
 		};
-		const body = new URLSearchParams({
+
+		const data = new URLSearchParams({
 			grant_type: "client_credentials",
 			client_id: this._id,
 			client_secret: this._secret,
+			scope: "public projects profile elearning tig forum"
 		}).toString();
-		const reqOptions = {
+
+		const config = {
 			url: `${Client.uri}oauth/token`,
 			method: "POST",
 			headers: headers,
-			data: body,
+			data,
 		};
 
 		try {
-			const res = await axios.request(reqOptions);
-			if (Client.activeDebug)
+			const res = await axios.request(config);
+
+			if (Client.activeDebug) {
 				console.log("New token generated for the client!");
+			}
+
 			return <string>res.data.access_token;
-		} catch (err: any) {
+		}
+		catch (err: any) {
 			console.error(
 				err.response.status,
 				err.response.statusText,
 				err.response.data
 			);
 		}
+
 		return null;
 	}
 
-	async get(
+	private async _request(
+		method: string | "POST",
 		path: string,
+		data?: any,
 		token?: string
 	): Promise<AxiosResponse<any, any> | null> {
-		if (!token && this._token === null)
-			this._token = await this._getToken();
-		const choosed = token == undefined ? this._token : token;
+
+		this._token = token || this._token || await this._getToken();
+
 		for (let stop = 2; stop !== 0; stop--) {
 			const config = {
+				url: Client.uri + path,
+				method,
 				headers: {
-					Authorization: "Bearer " + choosed || "",
+					Authorization: "Bearer " + this._token,
 					"Accept-Encoding": "application/json",
 				},
+				data
 			};
+
 			try {
-				const res = await limiter.schedule(() =>
-					axios.get(Client.uri + path, config)
-				);
-				return res;
-			} catch (err: any) {
-				if (err.response.status === 401) {
-					return null;
-				}
+				return limiter.schedule(() => axios.request(config));
+			}
+			catch (error: any) {
 				console.error(
-					err.response.status,
-					err.response.statusText,
-					err.response.data
+					error.response.status,
+					error.response.statusText,
+					error.response.data
 				);
-				if (token) return null;
-				this._token = await this._getToken();
+
+				if (error.response.status === 401) {
+					// refresh token once
+					console.log(error, 'Retrying..')
+					this._token = await this._getToken();
+				} else {
+					return null
+				}
 			}
 		}
+
 		return null;
+	}
+
+	async get(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("GET", path, data, token)
+	}
+
+	async post(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("POST", path, data, token)
+	}
+
+	async put(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("PUT", path, data, token)
+	}
+
+	async delete(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("DELETE", path, data, token)
 	}
 
 	async fetch(
@@ -146,77 +182,6 @@ export class Client {
 		}
 		bar.end();
 		return pages;
-	}
-
-	async post(
-		path: string,
-		body: any,
-		token?: string
-	): Promise<AxiosResponse<any, any> | null> {
-		if (!token && this._token === null)
-			this._token = await this._getToken();
-		const choosed = token == undefined ? this._token : token;
-		for (let stop = 2; stop !== 0; stop--) {
-			const headers = {
-				Authorization: "Bearer " + choosed || "",
-				"Accept-Encoding": "application/json",
-			};
-			const data = new URLSearchParams(body).toString();
-			const reqOptions = {
-				url: Client.uri + path,
-				method: "POST",
-				headers: headers,
-				data: data,
-			};
-
-			try {
-				const ret = await axios.request(reqOptions);
-				return ret.data;
-			} catch (err: any) {
-				if (err.response.status === 401) {
-					return null;
-				}
-				console.error(
-					err.response.status,
-					err.response.statusText,
-					err.response.data
-				);
-				if (token) return null;
-			}
-		}
-		return null;
-	}
-
-	async delete(
-		path: string,
-		token?: string
-	): Promise<AxiosResponse<any, any> | null> {
-		if (!token && this._token === null)
-			this._token = await this._getToken();
-		const choosed = token == undefined ? this._token : token;
-		for (let stop = 2; stop !== 0; stop--) {
-			const config = {
-				headers: {
-					Authorization: "Bearer " + choosed || "",
-					"Accept-Encoding": "application/json",
-				},
-			};
-			try {
-				const res = await limiter.schedule(() =>
-					axios.delete(Client.uri + path, config)
-				);
-				return res;
-			} catch (err: any) {
-				console.error(
-					err.response.status,
-					err.response.statusText,
-					err.response.data
-				);
-				if (token) return null;
-				this._token = await this._getToken();
-			}
-		}
-		return null;
 	}
 
 	get auth_manager(): AuthManager {
