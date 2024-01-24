@@ -1,3 +1,5 @@
+// It's better to run this script when your sesames got their badge back so you know exactly who they are.
+
 import "dotenv/config";
 import { readFileSync } from 'fs';
 import { Client, User } from "./index";
@@ -6,7 +8,10 @@ import { IProjectsUsers } from "./structures/projects_users";
 const path = process.argv[2];
 
 const LOGINS = readFileSync(path).toString().split("\n");
+// TODO: passed as parameters
 const CURSUS_ID = 9 // c-piscine
+const POOL_MONTH = 'january'
+const POOL_YEAR = '2024'
 const BEGIN_AT = "2024-01-22 00:00:00 UTC";
 const END_AT = "2024-02-02 17:00:00 UTC";
 const SLUGS = [
@@ -33,16 +38,20 @@ const refreshUser = async (login: string, client: Client) => {
 	}
 
 	// update cursus end_date
-	console.info(`Updating user '${login}' cursus end date..`)
+	console.info(`Updating user '${login}' cursus end date..`);
 	await client.cursus_users.put(cursusUser.id, { "cursus_user": { "end_at": END_AT } });
 
 	// set a retriable date for projects that were already tried
 	await Promise.allSettled(user.projects_users
 		.filter((pu) => SLUGS.includes(pu.project.slug))
 		.map(pu => {
-			console.info(`Updating user '${login}' project '${pu.project.slug}' retriable date..`)
+			console.info(`Updating user '${login}' project '${pu.project.slug}' retriable date..`);
 			return client.projects_users.put(pu.id, { "projects_user": { "retriable_at": BEGIN_AT } })
 		}));
+
+	// update pool month & year (mostly to appear in DEWEY)
+	console.info(`Updating user '${login}' pool month -> '${POOL_MONTH}' & year -> '${POOL_YEAR}'`);
+	await client.users.put(login, { "user": { "pool_month": POOL_MONTH, "pool_year": POOL_YEAR } });
 
 	console.log(`${login} DONE`)
 }
