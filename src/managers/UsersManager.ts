@@ -30,4 +30,14 @@ export class UsersManager extends BaseManager {
 		if (res === null) return null;
 		return new User(this.client, res?.data);
 	}
+
+	/**
+	 * Look for one projects_user by id
+	 * @param  {number | string} id // or login
+	 * @returns Promise
+	 */
+	async put(id: number | string, body: any): Promise<User | null> {
+		const res = await this.client.put("users/" + id, body);
+		return null;
+	}
 }
