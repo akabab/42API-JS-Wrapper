@@ -1,5 +1,5 @@
-import { User } from "./user";
-import { Exam } from "./exams";
+import { User } from "./User";
+import { Exam } from "./Exam";
 
 export interface IExamUser {
 	id: number;
@@ -7,7 +7,7 @@ export interface IExamUser {
 	exam: Exam;
 }
 
-export class ExamsUsers implements IExamUser {
+export class ExamUser implements IExamUser {
 	id: number;
 	user: User;
 	exam: Exam;

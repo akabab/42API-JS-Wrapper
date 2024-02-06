@@ -1,6 +1,4 @@
-import { BaseManager } from "../managers/BaseManager";
-import { Client } from "./client";
-import { ICampus } from "./campus";
+import { Campus } from "./Campus";
 
 export interface IExam {
   id: number;
@@ -13,12 +11,12 @@ export interface IExam {
   nbr_subscribers: number;
   created_at: Date;
   updated_at: Date;
-  campus: ICampus;
+  campus: Campus;
   // cursus: Cursus[];
   // projects: Project[];
 }
 
-export class Exam extends BaseManager implements IExam  {
+export class Exam implements IExam  {
 	id: number;
 	name: string;
 	begin_at: Date;
@@ -29,12 +27,11 @@ export class Exam extends BaseManager implements IExam  {
 	nbr_subscribers: number;
 	created_at: Date;
 	updated_at: Date;
-	campus: ICampus;
+	campus: Campus;
 	// cursus: Cursus[];
 	// projects: Project[];
 
-	constructor(client: Client, data: IExam) {
-		super(client);
+	constructor(data: IExam) {
 		this.id = data.id;
 		this.name = data.name;
 		this.ip_range = data.ip_range;
@@ -50,10 +47,4 @@ export class Exam extends BaseManager implements IExam  {
 		// this.projects = data.projects; []
 	}
 
-	// get feedbacks(): Promise<void | object[]> {
-	// 	const ret = this.client
-	// 		.fetch("events/" + this.id + "/feedbacks?")
-	// 		.catch(console.error);
-	// 	return ret;
-	// }
 }

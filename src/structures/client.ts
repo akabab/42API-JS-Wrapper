@@ -1,18 +1,20 @@
 import axios, { AxiosResponse } from "axios";
 import Bottleneck from "bottleneck";
+
+import { AuthManager } from "../auth/auth_manager";
+import { Loader } from "../utils/loader";
+
 import { UsersManager } from "../managers/UsersManager";
 import { CampusManager } from "../managers/CampusManager";
 import { EventsManager } from "../managers/EventsManager";
 import { ExamsManager } from "../managers/ExamsManager";
-import { Loader } from "../utils/loader";
 import { EventsUsersManager } from "../managers/EventsUsersManager";
 import { ExamsUsersManager } from "../managers/ExamsUsersManager";
 import { CursusManager } from "../managers/CursusManager";
 import { CursusUsersManager } from "../managers/CursusUsersManager";
-import { ProjectManager } from "../managers/ProjectManager";
+import { ProjectsManager } from "../managers/ProjectsManager";
 import { ProjectsUsersManager } from "../managers/ProjectsUsersManager";
 import { ScaleTeamsManager } from "../managers/ScaleTeamsManager";
-import { AuthManager } from "../auth/auth_manager";
 
 const limiter = new Bottleneck({
 	maxConcurrent: 8,
@@ -35,7 +37,7 @@ export class Client {
 	exams_users = new ExamsUsersManager(this);
 	cursus = new CursusManager(this);
 	cursus_users = new CursusUsersManager(this);
-	projects = new ProjectManager(this);
+	projects = new ProjectsManager(this);
 	projects_users = new ProjectsUsersManager(this);
 	scale_teams = new ScaleTeamsManager(this);
 

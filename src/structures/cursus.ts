@@ -1,6 +1,3 @@
-import { BaseManager } from "../managers/BaseManager";
-import { Client } from "./client";
-
 export interface ICursus {
     id: number,
     created_at: Date,
@@ -9,15 +6,14 @@ export interface ICursus {
     kind: string
 }
 
-export class Cursus extends BaseManager {
+export class Cursus implements ICursus {
 	id: number;
     created_at: Date;
     name: string;
     slug: string;
     kind: string;
 
-	constructor(client: Client, data: ICursus) {
-		super(client);
+	constructor(data: ICursus) {
 		this.id = data.id;
         this.created_at = data.created_at;
         this.name = data.name;

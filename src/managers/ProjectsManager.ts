@@ -1,8 +1,8 @@
 import { BaseManager } from "./BaseManager";
-import { Project, IProject } from "../structures/project";
-import { Client } from "../structures/client";
+import { Project, IProject } from "../structures/Project";
+import { Client } from "../structures/Client";
 
-export class ProjectManager extends BaseManager {
+export class ProjectsManager extends BaseManager {
 	constructor(client: Client) {
 		super(client);
 	}

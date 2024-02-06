@@ -1,6 +1,3 @@
-import { BaseManager } from "../managers/BaseManager";
-import { Client } from "./client";
-
 export interface IEvent {
 	id: number;
 	name: string;
@@ -20,7 +17,7 @@ export interface IEvent {
 	themes: any[];
 }
 
-export class Event extends BaseManager implements IEvent  {
+export class Event implements IEvent  {
 	id: number;
 	name: string;
 	description: string;
@@ -38,8 +35,7 @@ export class Event extends BaseManager implements IEvent  {
 	waitlist: any;
 	themes: any[];
 
-	constructor(client: Client, data: IEvent) {
-		super(client);
+	constructor(data: IEvent) {
 		this.id = data.id;
 		this.name = data.name;
 		this.description = data.description;
@@ -56,10 +52,4 @@ export class Event extends BaseManager implements IEvent  {
 		this.themes = data.themes;
 	}
 
-	get feedbacks(): Promise<void | object[]> {
-		const ret = this.client
-			.fetch("events/" + this.id + "/feedbacks?")
-			.catch(console.error);
-		return ret;
-	}
 }

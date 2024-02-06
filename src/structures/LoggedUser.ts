@@ -1,10 +1,11 @@
 import axios, { AxiosResponse } from "axios";
-import { Client } from "./client";
-import { CorrectionSlot } from "./correction_slot";
-import { Project } from "./project";
-import { IUser, User } from "./user";
+import { Client } from "./Client";
+import { CorrectionSlot } from "./CorrectionSlot";
+import { Project } from "./Project";
+import { IUser, User } from "./User";
 
 export class LoggedUser extends User {
+	private _client: Client;
 	private _refresh_token: string;
 	private _token: string;
 	private _id: string;
@@ -18,7 +19,8 @@ export class LoggedUser extends User {
 		id: string,
 		secret: string
 	) {
-		super(client, data);
+		super(data);
+		this._client = client;
 		this._refresh_token = refresh_token;
 		this._token = token;
 		this._id = id;
@@ -27,7 +29,7 @@ export class LoggedUser extends User {
 
 	private async _getToken() {
 		try {
-			const ret = await this.client.get("/oauth/token/info", this._token);
+			const ret = await this._client.get("/oauth/token/info", this._token);
 			if (ret?.data.expires_in_seconds < 10) {
 				const params = {
 					grant_type: "refresh_token",
@@ -35,7 +37,7 @@ export class LoggedUser extends User {
 					client_secret: this._secret,
 					refresh_token: this._refresh_token,
 				};
-				const response: any = await this.client.post(
+				const response: any = await this._client.post(
 					"oauth/token",
 					params
 				);
@@ -55,22 +57,22 @@ export class LoggedUser extends User {
 	}
 
 	async get(path: string): Promise<AxiosResponse<any, any> | null> {
-		return this.client.get(path, (await this._getToken()) || "");
+		return this._client.get(path, (await this._getToken()) || "");
 	}
 
 	async fetch(path: string, limit: number = 0): Promise<Object[]> {
-		return this.client.fetch(path, limit, (await this._getToken()) || "");
+		return this._client.fetch(path, limit, (await this._getToken()) || "");
 	}
 
 	async post(
 		path: string,
 		data: any
 	): Promise<AxiosResponse<any, any> | null> {
-		return this.client.post(path, data, (await this._getToken()) || "");
+		return this._client.post(path, data, (await this._getToken()) || "");
 	}
 
 	async delete(path: string): Promise<AxiosResponse<any, any> | null> {
-		return this.client.delete(path, (await this._getToken()) || "");
+		return this._client.delete(path, (await this._getToken()) || "");
 	}
 
 	async get_corrector_slots(): Promise<CorrectionSlot[]> {

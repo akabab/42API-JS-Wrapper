@@ -1,5 +1,5 @@
-import { ScaleTeam } from "./scale_teams";
-import { User } from "./user";
+import { ScaleTeam } from "./ScaleTeam";
+import { User } from "./User";
 
 export class CorrectionSlot {
     id: number;

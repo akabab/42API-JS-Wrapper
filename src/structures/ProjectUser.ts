@@ -1,15 +1,13 @@
-import { BaseManager } from "../managers/BaseManager";
-import { IProject } from "./project";
-import { Client } from "./client";
+import { Project } from "./Project";
 
-export interface IProjectsUsers {
+export interface IProjectUser {
     id: number,
     occurence: number,
     final_mark: number | null,
     status: string,
     "validated?": boolean,
     current_team_id: number,
-    project: IProject,
+    project: Project,
     cursus_ids: number[],
     marked_at: Date,
     marked: boolean,
@@ -18,14 +16,14 @@ export interface IProjectsUsers {
     updated_at: Date
 }
 
-export class ProjectsUsers extends BaseManager {
+export class ProjectUser implements IProjectUser {
     id: number;
     occurence: number;
     final_mark: number | null;
     status: string;
     "validated?": boolean;
     current_team_id: number;
-    project: IProject;
+    project: Project;
     cursus_ids: number[];
     marked_at: Date;
     marked: boolean;
@@ -33,8 +31,7 @@ export class ProjectsUsers extends BaseManager {
     created_at: Date;
     updated_at: Date;
 
-    constructor(client: Client, data: IProjectsUsers) {
-        super(client);
+    constructor(data: IProjectUser) {
         this.id = data.id;
         this.occurence = data.occurence;
         this.final_mark = data.final_mark;
@@ -49,4 +46,5 @@ export class ProjectsUsers extends BaseManager {
         this.created_at = data.created_at;
         this.updated_at = data.updated_at;
     }
+
 }

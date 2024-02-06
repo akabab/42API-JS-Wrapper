@@ -1,6 +1,6 @@
-import { Client } from "../structures/client";
+import { Client } from "../structures/Client";
 import { create_app } from "./auth_server";
-import { LoggedUser } from "../structures/logged_user";
+import { LoggedUser } from "../structures/LoggedUser";
 
 export class AuthProcess {
 	id: number;

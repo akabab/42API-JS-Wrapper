@@ -1,13 +1,13 @@
-import { ICampus } from "./campus";
-import { ICursus } from "./cursus";
+import { Campus } from "./Campus";
+import { Cursus } from "./Cursus";
 
 export interface IProject {
     id: number,
     name: string,
     slug: string,
     parent_id: number,
-    parent: IProject | null,
-    children: IProject[],
+    parent: Project | null,
+    children: Project[],
     description: string,
     objectives: string[],
     tier: number,
@@ -15,8 +15,8 @@ export interface IProject {
     created_at: Date,
     updated_at: Date,
     exam: boolean,
-    cusus: ICursus,
-    campus: ICampus,
+    cusus: Cursus,
+    campus: Campus,
     skills: Object[],
     project_sessions: Object[]
 }
@@ -26,8 +26,8 @@ export class Project{
     name: string;
     slug: string;
     parent_id: number;
-    parent: IProject | null;
-    children: IProject[];
+    parent: Project | null;
+    children: Project[];
     description: string;
     objectives: string[];
     tier: number;
@@ -35,8 +35,8 @@ export class Project{
     created_at: Date;
     updated_at: Date;
     exam: boolean;
-    cusus: ICursus;
-    campus: ICampus;
+    cusus: Cursus;
+    campus: Campus;
     skills: Object[];
     project_sessions: Object[];
 

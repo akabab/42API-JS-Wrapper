@@ -1,6 +1,6 @@
 import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/client";
-import { User, IUser } from "../structures/user";
+import { Client } from "../structures/Client";
+import { User, IUser } from "../structures/User";
 
 export class UsersManager extends BaseManager {
 	constructor(client: Client) {
@@ -17,7 +17,7 @@ export class UsersManager extends BaseManager {
 			"users/?" + options?.params.join("&"),
 			options?.limit
 		);
-		return res.map((u) => new User(this.client, <IUser>u));
+		return res.map(user => new User(<IUser> user));
 	}
 
 	/**
@@ -28,7 +28,7 @@ export class UsersManager extends BaseManager {
 	async get(login: string): Promise<User | null> {
 		const res = await this.client.get("users/" + login);
 		if (res === null) return null;
-		return new User(this.client, res?.data);
+		return new User(res?.data);
 	}
 
 	/**

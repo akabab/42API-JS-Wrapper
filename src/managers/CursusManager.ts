@@ -1,6 +1,6 @@
 import { BaseManager } from "./BaseManager";
-import { Cursus, ICursus } from "../structures/cursus";
-import { Client } from "../structures/client";
+import { Cursus, ICursus } from "../structures/Cursus";
+import { Client } from "../structures/Client";
 
 export class CursusManager extends BaseManager {
 	constructor(client: Client) {
@@ -20,7 +20,7 @@ export class CursusManager extends BaseManager {
 			"cursus/?" + options?.params.join("&"),
 			options?.limit
 		);
-		return res.map((u) => new Cursus(this.client, <ICursus>u));
+		return res.map((u) => new Cursus(<ICursus>u));
 	}
 
 	/**
@@ -29,6 +29,6 @@ export class CursusManager extends BaseManager {
 	 */
 	async get(target: number | string): Promise<Cursus | null> {
 		const res = await this.client.get("cursus/" + target);
-		return new Cursus(this.client, res?.data);
+		return new Cursus(res?.data);
 	}
 }

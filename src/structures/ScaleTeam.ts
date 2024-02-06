@@ -1,6 +1,6 @@
-import { IFeedback } from "./feedbacks";
-import { ITeam } from "./teams";
-import { IUser } from "./user";
+import { Feedback } from "./Feedback";
+import { Team } from "./Team";
+import { User } from "./User";
 
 export interface IScaleTeam {
     id: number,
@@ -12,17 +12,17 @@ export interface IScaleTeam {
     finale_mark: number,
     flag: Object,
     begin_at: Date,
-    correcteds: IUser[],
-    corrector: IUser,
+    correcteds: User[],
+    corrector: User,
     truant: Object,
     filled_at: Date,
     questions_with_answers: Object[],
     scale: Object,
-    team: ITeam,
-    feedbacks: IFeedback[]
+    team: Team,
+    feedbacks: Feedback[]
 }
 
-export class ScaleTeam implements IScaleTeam{
+export class ScaleTeam implements IScaleTeam {
 	id: number;
     scale_id: number;
     comment: string;
@@ -32,14 +32,14 @@ export class ScaleTeam implements IScaleTeam{
     finale_mark: number;
     flag: Object;
     begin_at: Date;
-    correcteds: IUser[];
-    corrector: IUser;
+    correcteds: User[];
+    corrector: User;
     truant: Object;
     filled_at: Date;
     questions_with_answers: Object[];
     scale: Object;
-    team: ITeam;
-    feedbacks: IFeedback[];
+    team: Team;
+    feedbacks: Feedback[];
 
 	constructor(data: IScaleTeam) {
 		this.id = data.id;

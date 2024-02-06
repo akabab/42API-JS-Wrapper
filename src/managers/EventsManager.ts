@@ -1,6 +1,6 @@
 import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/client";
-import { Event, IEvent } from "../structures/events";
+import { Client } from "../structures/Client";
+import { Event, IEvent } from "../structures/Event";
 
 export class EventsManager extends BaseManager {
 	constructor(client: Client) {
@@ -9,7 +9,7 @@ export class EventsManager extends BaseManager {
 
 	async get(target: number): Promise<Event | null> {
 		const res = await this.client.get("events/" + target);
-		return new Event(this.client, res?.data);
+		return new Event(res?.data);
 	}
 
 	async fetch(options?: {
@@ -20,6 +20,6 @@ export class EventsManager extends BaseManager {
 			"events/?" + options?.params?.join("&"),
 			options?.limit
 		);
-		return res.map((e) => new Event(this.client, <IEvent>e));
+		return res.map((e) => new Event(<IEvent>e));
 	}
 }

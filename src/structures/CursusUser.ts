@@ -1,8 +1,6 @@
-import { BaseManager } from "../managers/BaseManager";
-import { Client } from "./client";
-import { ICursus } from "./cursus";
+import { Cursus } from "./Cursus";
 
-export interface ICursusUsers {
+export interface ICursusUser {
 	id: number,
 	cursus_id: number,
 	grade: string,
@@ -14,10 +12,10 @@ export interface ICursusUsers {
 	has_coalition: boolean,
 	created_at: Date,
 	updated_at: Date,
-	cursus: ICursus
+	cursus: Cursus
 }
 
-export class CursusUsers extends BaseManager {
+export class CursusUser implements ICursusUser {
 	id: number;
 	cursus_id: number;
 	grade: string;
@@ -29,10 +27,9 @@ export class CursusUsers extends BaseManager {
 	has_coalition: boolean;
 	created_at: Date;
 	updated_at: Date;
-	cursus: ICursus;
+	cursus: Cursus;
 
-	constructor(client: Client, data: ICursusUsers) {
-		super(client);
+	constructor(data: ICursusUser) {
 		this.id = data.id;
 		this.cursus_id = data.cursus_id;
 		this.grade = data.grade;

@@ -1,7 +1,8 @@
-import { Client } from "../structures/client";
+import { Client } from "../structures/Client";
 
 export class BaseManager {
 	protected client: Client;
+
 	constructor(client: Client) {
 		this.client = client;
 	}

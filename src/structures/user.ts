@@ -1,8 +1,6 @@
-import { BaseManager } from "../managers/BaseManager";
-import { Client } from "./client";
-import { ICursusUsers } from "./cursus_users";
-import { IProjectsUsers } from "./projects_users";
-import { IScaleTeam, ScaleTeam } from "./scale_teams";
+import { CursusUser } from "./CursusUser";
+import { ProjectUser } from "./ProjectUser";
+import { IScaleTeam, ScaleTeam } from "./ScaleTeam";
 
 export interface IUser {
 	id: number;
@@ -37,8 +35,8 @@ export interface IUser {
 	alumnized_at: Date | null;
 	"alumni?": boolean;
 	groups: object[];
-	cursus_users: ICursusUsers[];
-	projects_users: IProjectsUsers[];
+	cursus_users: CursusUser[];
+	projects_users: ProjectUser[];
 	languages_users: object[];
 	achievements: object[];
 	titles: object[];
@@ -52,7 +50,7 @@ export interface IUser {
 	campus_users: object[];
 }
 
-export class User extends BaseManager {
+export class User implements IUser {
 	id: number;
 	email: string;
 	login: string;
@@ -85,8 +83,8 @@ export class User extends BaseManager {
 	alumnized_at: Date | null;
 	"alumni?": boolean;
 	groups: object[];
-	cursus_users: ICursusUsers[];
-	projects_users: IProjectsUsers[];
+	cursus_users: CursusUser[];
+	projects_users: ProjectUser[];
 	languages_users: object[];
 	achievements: object[];
 	titles: object[];
@@ -99,8 +97,7 @@ export class User extends BaseManager {
 	campus: object[];
 	campus_users: object[];
 
-	constructor(client: Client, data: IUser) {
-		super(client);
+	constructor(data: IUser) {
 		this.id = data.id;
 		this.email = data.email;
 		this.login = data.login;
@@ -139,38 +136,38 @@ export class User extends BaseManager {
 		this.campus_users = data.campus_users;
 	}
 
-	async fetchEvents(): Promise<void | object[]> {
-		const ret = this.client
-			.fetch("users/" + this.id + "/events?")
-			.catch(console.error);
-		return ret;
-	}
+	// async fetchEvents(): Promise<void | object[]> {
+	// 	const ret = this.client
+	// 		.fetch("users/" + this.id + "/events?")
+	// 		.catch(console.error);
+	// 	return ret;
+	// }
 
-	async fetchProjects(): Promise<void | object[]> {
-		const ret = this.client
-			.fetch("users/" + this.id + "/projects_users?")
-			.catch(console.error);
-		return ret;
-	}
+	// async fetchProjects(): Promise<void | object[]> {
+	// 	const ret = this.client
+	// 		.fetch("users/" + this.id + "/projects_users?")
+	// 		.catch(console.error);
+	// 	return ret;
+	// }
 
-	/**
-	 * Look for an array of scale teams that the user is in
-	 * @param  {{limit?:number;params:string[]}} options basic fetch options
-	 * @param  {number} type 0 for all, 1 for "as corrector", 2 for "as corrected"
-	 * @returns Promise
-	 */
-	async fetchScale_teams(
-		options?: {
-			limit?: number;
-			params?: string[];
-		},
-		type: number = 0
-	): Promise<ScaleTeam[]> {
-		let url = "/users/" + this.id + "/scale_teams";
-		if (type === 1) url += "/as_corrector";
-		if (type === 2) url += "/as_corrected";
-		url += "?" + options?.params?.join("&");
-		const res = await this.client.fetch(url, options?.limit);
-		return res.map((o) => new ScaleTeam(<IScaleTeam>o));
-	}
+	// /**
+	//  * Look for an array of scale teams that the user is in
+	//  * @param  {{limit?:number;params:string[]}} options basic fetch options
+	//  * @param  {number} type 0 for all, 1 for "as corrector", 2 for "as corrected"
+	//  * @returns Promise
+	//  */
+	// async fetchScale_teams(
+	// 	options?: {
+	// 		limit?: number;
+	// 		params?: string[];
+	// 	},
+	// 	type: number = 0
+	// ): Promise<ScaleTeam[]> {
+	// 	let url = "/users/" + this.id + "/scale_teams";
+	// 	if (type === 1) url += "/as_corrector";
+	// 	if (type === 2) url += "/as_corrected";
+	// 	url += "?" + options?.params?.join("&");
+	// 	const res = await this.client.fetch(url, options?.limit);
+	// 	return res.map((o) => new ScaleTeam(<IScaleTeam>o));
+	// }
 }

@@ -1,6 +1,6 @@
 import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/client";
-import { Exam, IExam } from "../structures/exams";
+import { Client } from "../structures/Client";
+import { Exam, IExam } from "../structures/Exam";
 
 export class ExamsManager extends BaseManager {
 	constructor(client: Client) {
@@ -9,7 +9,7 @@ export class ExamsManager extends BaseManager {
 
 	async get(target: number): Promise<Exam | null> {
 		const res = await this.client.get("exams/" + target);
-		return new Exam(this.client, res?.data);
+		return new Exam(res?.data);
 	}
 
 	async fetch(options?: {
@@ -20,6 +20,6 @@ export class ExamsManager extends BaseManager {
 			"exams/?" + options?.params?.join("&"),
 			options?.limit
 		);
-		return res.map((e) => new Exam(this.client, <IExam>e));
+		return res.map((e) => new Exam(<IExam>e));
 	}
 }

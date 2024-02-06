@@ -1,5 +1,5 @@
 import express from 'express';
-import { LoggedUser } from '../structures/logged_user';
+import { LoggedUser } from '../structures/LoggedUser';
 import { AuthManager } from './auth_manager';
 
 export function create_app(server: {port: number, redirect_url?: string, callback_function?: (arg0: LoggedUser) => void}, auth_manager: AuthManager, auth_process_id: number): any {
