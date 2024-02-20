@@ -32,12 +32,22 @@ export class CursusUsersManager extends BaseManager {
 	}
 
 	/**
-	 * Look for one cursus_user by id
+	 * Update one cursus_user by id
 	 * @param  {number} id
 	 * @returns Promise
 	 */
 	async put(id: number, body: any): Promise<CursusUser | null> {
 		const res = await this.client.put("cursus_users/" + id, body);
+		return null;
+	}
+
+	/**
+	 * Create new cursus_user
+	 * @param  { cursus_user: { user_id, cursus_id, begin_at }} body
+	 * @returns Promise
+	 */
+	async post(body: any): Promise<CursusUser | null> {
+		const res = await this.client.post("cursus_users", body);
 		return null;
 	}
 }
