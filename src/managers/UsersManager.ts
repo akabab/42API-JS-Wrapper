@@ -1,6 +1,7 @@
 import { BaseManager } from "./BaseManager";
 import { Client } from "../structures/Client";
 import { User, IUser } from "../structures/User";
+import { UserCandidature, IUserCandidature } from "../structures/UserCandidature";
 
 export class UsersManager extends BaseManager {
 	constructor(client: Client) {
@@ -22,22 +23,32 @@ export class UsersManager extends BaseManager {
 
 	/**
 	 * Look for one user
-	 * @param  {string} login
+	 * @param  {number | string} idOrSlug
 	 * @returns Promise
 	 */
-	async get(login: string): Promise<User | null> {
-		const res = await this.client.get("users/" + login);
-		if (res === null) return null;
-		return new User(res?.data);
+	async get(idOrSlug: number | string): Promise<User | null> {
+		const res = await this.client.get("users/" + idOrSlug);
+
+		return res && new User(res.data);
 	}
 
 	/**
-	 * Look for one projects_user by id
-	 * @param  {number | string} id // or login
+		 * Get User Candidature for one user
+		 * @param  {string} login
+		 * @returns Promise
+		 */
+	async getUserCandidature(login: string): Promise<UserCandidature | null> {
+		const res = await this.client.get("users/" + login + "/user_candidature");
+
+		return res && new UserCandidature(res.data);
+	}
+
+	/**
+	 * Update one User
+	 * @param  {number | string} idOrSlug
 	 * @returns Promise
 	 */
-	async put(id: number | string, body: any): Promise<User | null> {
-		const res = await this.client.put("users/" + id, body);
-		return null;
+	async put(idOrSlug: number | string, body?: any, config?: any) {
+		return this.client.put("users/" + idOrSlug, body, config);
 	}
 }
