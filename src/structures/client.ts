@@ -97,16 +97,19 @@ export class Client {
 		method: string | "POST",
 		path: string,
 		data?: any,
+		config?: any,
 		token?: string
 	): Promise<AxiosResponse<any, any> | null> {
 
 		this._token = token || this._token || await this._getToken();
 
 		for (let stop = 2; stop !== 0; stop--) {
-			const config = {
+			const _config = {
+				...config,
 				url: Client.uri + path,
 				method,
 				headers: {
+					...config.headers,
 					Authorization: "Bearer " + this._token,
 					"Accept-Encoding": "application/json",
 				},
@@ -114,7 +117,7 @@ export class Client {
 			};
 
 			try {
-				return limiter.schedule(() => axios.request(config));
+				return limiter.schedule(() => axios.request(_config));
 			}
 			catch (error: any) {
 				console.error(
@@ -136,20 +139,20 @@ export class Client {
 		return null;
 	}
 
-	async get(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
-		return this._request("GET", path, data, token)
+	async get(path: string, data?: any, config?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("GET", path, data, config, token)
 	}
 
-	async post(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
-		return this._request("POST", path, data, token)
+	async post(path: string, data?: any, config?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("POST", path, data, config, token)
 	}
 
-	async put(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
-		return this._request("PUT", path, data, token)
+	async put(path: string, data?: any, config?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("PUT", path, data, config, token)
 	}
 
-	async delete(path: string, data?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
-		return this._request("DELETE", path, data, token)
+	async delete(path: string, data?: any, config?: any, token?: string): Promise<AxiosResponse<any, any> | null> {
+		return this._request("DELETE", path, data, config, token)
 	}
 
 	async fetch(
