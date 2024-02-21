@@ -8,8 +8,8 @@
 		"dist/"
 	],
 	"scripts": {
-		"lint": "eslint --ext .ts .",
-		"lint:fix": "eslint --ext .ts --fix .",
+		"lint": "eslint --ext .ts src",
+		"lint:fix": "eslint --ext .ts --fix src",
 		"build": "tsc && npm run lint"
 	},
 	"author": "akabab",

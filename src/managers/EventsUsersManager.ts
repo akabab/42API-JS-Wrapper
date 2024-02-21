@@ -1,20 +1,15 @@
-import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/Client";
-import { EventUser, IEventUser } from "../structures/EventUser";
+import { BaseManager } from './BaseManager'
+import { EventUser, type IEventUser } from '../structures/EventUser'
 
 export class EventsUsersManager extends BaseManager {
-  constructor(client: Client) {
-    super(client);
-  }
-
-  async fetch(
-    event_id: number,
-    options?: { limit?: number; params: string[] },
-  ) {
+  async fetch (
+    eventId: number,
+    options?: { limit?: number, params: string[] }
+  ): Promise<EventUser[]> {
     const res = await this.client.fetch(
-      "events/" + event_id + "/events_users/?" + options?.params.join("&"),
-      options?.limit,
-    );
-    return res.map((eu) => new EventUser(<IEventUser> eu));
+      'events/' + eventId + '/events_users/?' + options?.params.join('&'),
+      options?.limit
+    )
+    return res.map((eu) => new EventUser(eu as IEventUser))
   }
 }

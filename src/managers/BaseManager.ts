@@ -1,9 +1,9 @@
-import { Client } from "../structures/Client";
+import { type Client } from '../structures/Client'
 
 export class BaseManager {
-	protected client: Client;
+  protected client: Client
 
-	constructor(client: Client) {
-		this.client = client;
-	}
+  constructor (client: Client) {
+    this.client = client
+  }
 }

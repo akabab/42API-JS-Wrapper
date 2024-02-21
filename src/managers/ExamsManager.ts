@@ -1,25 +1,21 @@
-import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/Client";
-import { Exam, IExam } from "../structures/Exam";
+import { BaseManager } from './BaseManager'
+import { Exam, type IExam } from '../structures/Exam'
 
 export class ExamsManager extends BaseManager {
-	constructor(client: Client) {
-		super(client);
-	}
+  async get (target: number): Promise<Exam | null> {
+    const res = await this.client.get('exams/' + target)
 
-	async get(target: number): Promise<Exam | null> {
-		const res = await this.client.get("exams/" + target);
-		return new Exam(res?.data);
-	}
+    return res?.data != null ? new Exam(res.data as IExam) : null
+  }
 
-	async fetch(options?: {
-		limit?: number;
-		params?: string[];
-	}): Promise<Exam[]> {
-		const res = await this.client.fetch(
-			"exams/?" + options?.params?.join("&"),
-			options?.limit
-		);
-		return res.map((e) => new Exam(<IExam>e));
-	}
+  async fetch (options?: {
+    limit?: number
+    params?: string[]
+  }): Promise<Exam[]> {
+    const res = await this.client.fetch(
+      'exams/?' + options?.params?.join('&'),
+      options?.limit
+    )
+    return res.map((e) => new Exam(e as IExam))
+  }
 }

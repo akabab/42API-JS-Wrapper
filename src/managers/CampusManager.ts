@@ -1,14 +1,10 @@
-import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/Client";
-import { ICampus, Campus } from "../structures/Campus";
+import { BaseManager } from './BaseManager'
+import { Campus, type ICampus } from '../structures/Campus'
 
 export class CampusManager extends BaseManager {
-	constructor(client: Client) {
-		super(client);
-	}
+  async get (campusId: number): Promise<Campus | null> {
+    const res = await this.client.get('campus/ ' + campusId)
 
-	async get(campus_id: number): Promise<Campus | null> {
-		const res = await this.client.get("campus/ " + campus_id);
-		return new Campus(res?.data);
-	}
+    return res?.data != null ? new Campus(res.data as ICampus) : null
+  }
 }

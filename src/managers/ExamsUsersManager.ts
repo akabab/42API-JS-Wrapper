@@ -1,21 +1,16 @@
-import { BaseManager } from "./BaseManager";
-import { Client } from "../structures/Client";
-import { ExamUser, IExamUser } from "../structures/ExamUser";
+import { BaseManager } from './BaseManager'
+import { ExamUser, type IExamUser } from '../structures/ExamUser'
 
 export class ExamsUsersManager extends BaseManager {
-  constructor(client: Client) {
-    super(client);
-  }
-
-  async fetch(
-    exam_id: number,
-    options?: { limit?: number; params: string[] },
-  ) {
+  async fetch (
+    examId: number,
+    options?: { limit?: number, params: string[] }
+  ): Promise<ExamUser[]> {
     const res = await this.client.fetch(
-      "exams/" + exam_id + "/exams_users/?" + options?.params.join("&"),
-      options?.limit,
-    );
-    return res.map((eu) => new ExamUser(<IExamUser> eu));
+      'exams/' + examId + '/exams_users/?' + options?.params.join('&'),
+      options?.limit
+    )
+    return res.map((eu) => new ExamUser(eu as IExamUser))
   }
 
   /**
@@ -23,10 +18,10 @@ export class ExamsUsersManager extends BaseManager {
    * @param  {string} id
    * @returns Promise
    */
-  async get(id: string): Promise<ExamUser | null> {
-    const res = await this.client.get("exams_users/" + id);
-    if (res === null) return null;
-    return new ExamUser(res?.data);
+  async get (id: string): Promise<ExamUser | null> {
+    const res = await this.client.get('exams_users/' + id)
+
+    return res?.data != null ? new ExamUser(res.data as IExamUser) : null
   }
 
   /**
@@ -35,21 +30,21 @@ export class ExamsUsersManager extends BaseManager {
    * @param  {any} body
    * @returns Promise
    */
-  async put(id: number, body: any): Promise<ExamUser | null> {
-    const res = await this.client.put("exams_users/" + id, body);
-    return null;
+  async put (id: number, body: any): Promise<void> {
+    await this.client.put('exams_users/' + id, body)
   }
 
   /**
    * Create an exam user for a given exam
-   * @param  {number} exam_id
-   * @param  {number} user_id
+   * @param  {number} examId
+   * @param  {number} userId
    * @returns Promise
    */
-  async post(exam_id: number, user_id: number) {
-    return this.client.post("exams/" + exam_id + "/exams_users", {
-      "exams_user": {
-        "user_id": user_id
+  async post (examId: number, userId: number): Promise<void> {
+    await this.client.post('exams/' + examId + '/exams_users', {
+      exams_user: {
+        user_id: userId
       }
-    }) }
+    })
+  }
 }

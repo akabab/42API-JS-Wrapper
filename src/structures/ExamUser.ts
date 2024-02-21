@@ -1,20 +1,20 @@
-import { User } from "./User";
-import { Exam } from "./Exam";
+import { type User } from './User'
+import { type Exam } from './Exam'
 
 export interface IExamUser {
-	id: number;
-	user: User;
-	exam: Exam;
+  id: number
+  user: User
+  exam: Exam
 }
 
 export class ExamUser implements IExamUser {
-	id: number;
-	user: User;
-	exam: Exam;
+  id: number
+  user: User
+  exam: Exam
 
-	constructor(data: IExamUser) {
-		this.id = data.id;
-		this.user = data.user;
-		this.exam = data.exam;
-	}
+  constructor (data: IExamUser) {
+    this.id = data.id
+    this.user = data.user
+    this.exam = data.exam
+  }
 }
